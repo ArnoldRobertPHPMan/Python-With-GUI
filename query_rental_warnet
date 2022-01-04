@@ -1,0 +1,13 @@
+CREATE TABLE `warnet` (
+  `kode` VARCHAR(10) NOT NULL,
+  `nama` VARCHAR(30) NOT NULL,
+  `internet` VARCHAR(30) NOT NULL,
+  `mengetik` VARCHAR(30) NOT NULL,
+  `game_online` VARCHAR(30) NOT NULL,
+  `scan` VARCHAR(30) NOT NULL,
+  `print_warna` VARCHAR(30) NOT NULL,
+  `print_hitam_putih` VARCHAR(30) NOT NULL,
+  `teh_botol` VARCHAR(30) NOT NULL,
+  `ADDTIME` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  PRIMARY KEY (`kode`)
+) ENGINE=INNODB DEFAULT CHARSET=latin1
