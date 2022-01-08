@@ -1,12 +1,14 @@
+#Menggunakan modul tkinter sebagai GUI
 import tkinter
 from tkinter import *
 from tkinter import ttk
 from tkinter.scrolledtext import ScrolledText
+#Mengimport mysql database
 import pymysql
 import datetime
 import time
 
-
+#Class dan fungsi event aplikasi
 root = Tk()
 class WindowDraggable():
 
@@ -28,8 +30,11 @@ class WindowDraggable():
                 x = (event.x_root - self.x - self.label.winfo_rootx() + self.label.winfo_rootx())
                 y = (event.y_root - self.y - self.label.winfo_rooty() + self.label.winfo_rooty())
                 root.geometry("+%s+%s" % (x, y))
-                
+
+#Menampilkan sub judul kolom aplikasi untuk view/select data                
 judul_kolom = ("ID","Nama","Internet","Mengetik","GO","Scan","Print WR","Print HP","Teh Botol","Total")
+
+#Class dan fungsi untuk mengatur tampilan aplikasi
 class Warnet:
         def __init__(self, parent):
                 self.parent = parent
@@ -45,7 +50,8 @@ class Warnet:
                 
         def keluar(self,event=None):
                 self.parent.destroy()
-                
+
+#Fungsi double click untuk mendapatkan ID agar data bisa di edit dan update                
         def OnDoubleClick(self, event):
 
                 self.entKode.config(state="normal")
@@ -65,6 +71,8 @@ class Warnet:
                 self.entKode.insert(END, ck)
                 
                 cKode = self.entKode.get()
+                
+#Koneksi ke database untuk mendapatkan ID                
                 con = pymysql.connect(db="db_warnet", user="root", passwd="", host="localhost", port=3306,autocommit=True)
                 cur = con.cursor()
                 sql = "SELECT nama,internet,mengetik,game_online,scan,print_warna,print_hitam_putih,teh_botol FROM warnet WHERE kode = %s"
@@ -73,8 +81,6 @@ class Warnet:
                 
         
                 self.entNama.insert(END, data[0])
-                
-                #
                 self.entInternet.insert(END, data[1])                
                 self.entMengetik.insert(END, data[2])
                 self.entGO.insert(END, data[3])
@@ -87,6 +93,7 @@ class Warnet:
                 self.btnUpdate.config(state="normal")
                 self.btnDelete.config(state="normal")
                 
+#Fungsi mengatur komponen-komponen aplikasi (Label,text,dll)               
         def aturKomponen(self):
                 frameWin = Frame(self.parent, bg="#ADD8E6")
                 frameWin.pack(fill=X,side=TOP)
@@ -190,9 +197,20 @@ class Warnet:
                 self.trvTabel.pack(side=TOP, fill=BOTH)
                 self.trvTabel.configure(yscrollcommand=sbVer.set)
                 self.table()
+
                 
+#Fungsi untuk menampilkan harga sesuai inputan lama pemakaian                
         def table(self):
 
+#Comment Query select data :
+#SELECT kode AS ID,nama,FORMAT(if(internet >0 and internet <=30,(30/60)*4000,(internet/60)*4000),0)
+#internet,FORMAT(if(mengetik >0 and mengetik <=30,(30/60)*2000,(mengetik/60)*2000),0)mengetik,
+#FORMAT(if(game_online >0 and game_online <=30,(30/60)*5000,(game_online/60)*5000),0)game_online,
+#FORMAT((scan*1000),0)scan,FORMAT((print_warna*500),0)print_warna,FORMAT((print_hitam_putih*300),0)print_hitam_putih,
+#FORMAT((teh_botol*3000),0)teh_botol,
+#FORMAT(if(internet >0 and internet <=30,(30/60)*4000,(internet/60)*4000)+if(mengetik >0 and mengetik <=30,(30/60)*2000,(mengetik/60)*2000)+
+#if(game_online >0 and game_online <=30,(30/60)*5000,(game_online/60)*5000)+(scan*1000)+(print_warna*500)+(print_hitam_putih*300)+
+#(teh_botol*3000),0) total FROM warnet order by kode desc
         
                 con = pymysql.connect(db="db_warnet", user="root", passwd="", host="localhost", port=3306,autocommit=True)
                 cur = con.cursor()
@@ -225,7 +243,7 @@ class Warnet:
                 cur.close()
                 con.close()        
                        
-
+#Fungsi untuk mendapatkan kode id terbaru dari kode terakhir data
         def auto(self):
                 con = pymysql.connect(db='db_warnet', user='root', passwd='', host='localhost', port=3306,autocommit=True)
                 cur = con.cursor()
@@ -268,7 +286,7 @@ class Warnet:
         def onClose(self, event=None):
                 self.parent.destroy()
 
-
+#Fungsi untuk hapus data transaksi
         def onDelete(self):
                 con = pymysql.connect(db='db_warnet', user='root', passwd='', host='localhost', port=3306,autocommit=True)
                 cur = con.cursor()
@@ -304,7 +322,7 @@ class Warnet:
                 self.auto()
                 self.entNama.focus_set()
 
-                        
+#Fungsi untuk insert data transaksi baru ke database                       
         def onSave(self):
         
                 con = pymysql.connect(db='db_warnet', user='root', passwd='', host='localhost', port=3306,autocommit=True)
@@ -333,7 +351,7 @@ class Warnet:
                         
                         cur.close()
                         con.close()
-                
+#Fungsi untuk mengupdate data transaksi ke database                
         def onUpdate(self):
                 cKode = self.entKode.get()
                 
